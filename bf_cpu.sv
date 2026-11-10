@@ -24,4 +24,20 @@ rom_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(ROM_SI
 ram_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(RAM_SIZE)) ram (.clk(clk), .addr(mp), .enable_w(m_enable_w), .data_i(m_data), .data_o(m_data));
 ram_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(STK_SIZE)) stack (.clk(clk), .addr(sp), .enable_w(s_enable_w), .data_i(s_data), .data_o(s_data));
 
+initial begin
+
+  pc <= 0;
+  mp <= 0;
+  sp <= 0;
+  bp <= 0;
+
+  instr <= 0;
+  m_data <= 0;
+  s_data <= 0;
+
+  m_enable_w <= 0;
+  s_enable_w <= 0;
+
+end
+
 endmodule
