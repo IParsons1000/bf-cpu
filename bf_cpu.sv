@@ -5,11 +5,23 @@ module bf_cpu
 local parameter ADDR_WIDTH = 8;
 local parameter DATA_WIDTH = 8;
 local parameter ROM_SIZE = 256;
+local parameter STK_SIZE = 256;
+local parameter RAM_SIZE = 256;
 
 logic [ADDR_WIDTH-1:0] pc;
+logic [ADDR_WIDTH-1:0] mp;
+logic [ADDR_WIDTH-1:0] sp;
+logic [ADDR_WIDTH-1:0] bp;
 
 logic [DATA_WIDTH-1:0] instr;
+logic [DATA_WIDTH-1:0] m_data;
+logic [DATA_WIDTH-1:0] s_data;
+
+logic m_enable_w;
+logic s_enable_w;
 
 rom_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(ROM_SIZE)) rom (.clk(clk), .enable(enable), .addr(pc), .data(instr));
+ram_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(RAM_SIZE)) ram (.clk(clk), .addr(mp), .enable_w(m_enable_w), .data_i(m_data), .data_o(m_data));
+ram_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(STK_SIZE)) stack (.clk(clk), .addr(sp), .enable_w(s_enable_w), .data_i(s_data), .data_o(s_data));
 
 endmodule
