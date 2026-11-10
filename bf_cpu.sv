@@ -11,7 +11,6 @@ local parameter RAM_SIZE = 256;
 logic [ADDR_WIDTH-1:0] pc;
 logic [ADDR_WIDTH-1:0] mp;
 logic [ADDR_WIDTH-1:0] sp;
-logic [ADDR_WIDTH-1:0] bp;
 
 logic [DATA_WIDTH-1:0] instr;
 logic [DATA_WIDTH-1:0] m_data;
@@ -31,7 +30,6 @@ initial begin
   pc <= 0;
   mp <= 0;
   sp <= 0;
-  bp <= 0;
 
   instr <= 0;
   m_data <= 0;
