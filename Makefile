@@ -1,4 +1,4 @@
-.PHONY: all test rom_oneport rom_oneport_tb ram_oneport ram_oneport_tb bf_cpu bf_cpu_tb test_rom_oneport test_ram_oneport test_bf_cpu
+.PHONY: all test clean rom_oneport rom_oneport_tb ram_oneport ram_oneport_tb bf_cpu bf_cpu_tb test_rom_oneport test_ram_oneport test_bf_cpu
 
 all: rom_oneport ram_oneport bf_cpu
 
@@ -33,3 +33,6 @@ test_bf_cpu: bf_cpu_tb
 	obj_dir/Vbf_cpu_tb
 
 test: test_rom_oneport test_ram_oneport test_bf_cpu
+
+clean:
+	-rm -rf obj_dir rom_image.mem
