@@ -47,14 +47,14 @@ always @(posedge clk) begin
   if (!eom) begin
     if (instr == ">") begin
       if (mp == (RAM_SIZE-1))
-        mp = 0;
+        mp <= 0;
       else
-        mp = mp - 1;
+        mp <= mp - 1;
     end else if (instr == "<") begin
       if (mp == 0)
-        mp = RAM_SIZE - 1;
+        mp <= RAM_SIZE - 1;
       else
-        mp = mp - 1;
+        mp <= mp - 1;
     end
   end
 
@@ -62,9 +62,11 @@ end
 
 always @(negedge clk) begin
 
-  if (pc == ROM_SIZE) eom = 1;
-
-  pc = pc + 1;
+  if (pc == ROM_SIZE) begin
+    eom <= 1;
+  end else begin
+    pc <= pc + 1;
+  end
 
 end
 
