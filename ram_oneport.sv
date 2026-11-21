@@ -11,8 +11,13 @@ module ram_oneport
 logic [DATA_WIDTH-1:0] mem [MEM_SIZE:0];
 
 always_ff @(posedge clk) begin
-  if (enable_w) mem[addr] <= data_i;
-  data_o <= mem[addr];
+
+  if (enable_w) begin
+    mem[addr] <= data_i;
+  end else begin
+    data_o <= mem[addr];
+  end
+
 end
 
 endmodule

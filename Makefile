@@ -1,4 +1,4 @@
-.PHONY: all test rom_oneport rom_oneport_tb ram_oneport bf_cpu test_rom_oneport
+.PHONY: all test rom_oneport rom_oneport_tb ram_oneport ram_oneport_tb bf_cpu test_rom_oneport test_ram_oneport
 
 all: rom_oneport ram_oneport bf_cpu
 
@@ -14,10 +14,16 @@ rom_oneport_tb: rom_oneport rom_oneport_tb.sv
 ram_oneport: ram_oneport.sv
 	verilator --binary -j 0 -Wall ram_oneport.sv
 
+ram_oneport_tb: ram_oneport ram_oneport_tb.sv
+	verilator --binary -j 0 -Wall ram_oneport_tb.sv
+
 bf_cpu: bf_cpu.sv
 	verilator --binary -j 0 -Wall bf_cpu.sv
 
 test_rom_oneport: rom_oneport_tb
 	obj_dir/Vrom_oneport_tb
 
-test: test_rom_oneport
+test_ram_oneport: ram_oneport_tb
+	obj_dir/Vram_oneport_tb
+
+test: test_rom_oneport test_ram_oneport
