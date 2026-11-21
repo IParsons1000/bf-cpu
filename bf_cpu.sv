@@ -1,6 +1,5 @@
 module bf_cpu
-( input logic clk,
-  input logic enable );
+( input logic clk );
 
 parameter ADDR_WIDTH = 8;
 parameter DATA_WIDTH = 8;
