@@ -2,11 +2,11 @@ module bf_cpu
 ( input logic clk,
   input logic enable );
 
-local parameter ADDR_WIDTH = 8;
-local parameter DATA_WIDTH = 8;
-local parameter ROM_SIZE = 256;
-local parameter STK_SIZE = 256;
-local parameter RAM_SIZE = 256;
+parameter ADDR_WIDTH = 8;
+parameter DATA_WIDTH = 8;
+parameter ROM_SIZE = 8'd255;
+parameter STK_SIZE = 8'd255;
+parameter RAM_SIZE = 8'd255;
 
 logic [ADDR_WIDTH-1:0] pc;
 logic [ADDR_WIDTH-1:0] mp;
@@ -27,42 +27,44 @@ ram_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(STK_SI
 
 initial begin
 
-  pc <= 0;
-  mp <= 0;
-  sp <= 0;
+  pc = 0;
+  mp = 0;
+  sp = 0;
 
-  instr <= 0;
-  m_data <= 0;
-  s_data <= 0;
+  instr = 0;
+  m_data = 0;
+  s_data = 0;
 
-  m_enable_w <= 0;
-  s_enable_w <= 0;
+  m_enable_w = 0;
+  s_enable_w = 0;
 
-  eom <= 0;
+  eom = 0;
 
 end
 
-always @(posedge clk and not eom) begin
+always @(posedge clk) begin
 
-  if (instr == ">") begin
-    if (mp == (RAM_SIZE-1))
-      mp = 0;
-    else
-      mp = mp - 1;
-  end else if (instr == "<") begin
-    if (mp == 0)
-      mp = RAM_SIZE - 1;
-    else
-      mp = mp - 1;
+  if (!eom) begin
+    if (instr == ">") begin
+      if (mp == (RAM_SIZE-1))
+        mp = 0;
+      else
+        mp = mp - 1;
+    end else if (instr == "<") begin
+      if (mp == 0)
+        mp = RAM_SIZE - 1;
+      else
+        mp = mp - 1;
+    end
   end
 
 end
 
 always @(negedge clk) begin
 
-  pc = pc + 1;
+  if (pc == ROM_SIZE) eom = 1;
 
-  if (pc > ROM_SIZE) eom = 1;
+  pc = pc + 1;
 
 end
 
