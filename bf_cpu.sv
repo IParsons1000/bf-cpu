@@ -21,7 +21,7 @@ logic s_enable_w;
 
 logic eom;
 
-rom_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(ROM_SIZE)) rom (.clk(clk), .enable(enable), .addr(pc), .data(instr));
+rom_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(ROM_SIZE)) rom (.clk(clk), .addr(pc), .data(instr));
 ram_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(RAM_SIZE)) ram (.clk(clk), .addr(mp), .enable_w(m_enable_w), .data_i(m_data), .data_o(m_data));
 ram_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(STK_SIZE)) stack (.clk(clk), .addr(sp), .enable_w(s_enable_w), .data_i(s_data), .data_o(s_data));
 

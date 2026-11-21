@@ -5,20 +5,18 @@ parameter DATA_WIDTH = 8;
 parameter MEM_SIZE = 8'd255;
 
 logic clk;
-logic enable;
 logic [ADDR_WIDTH-1:0] test_addr;
 logic [DATA_WIDTH-1:0] test_mem [MEM_SIZE:0];
 logic [DATA_WIDTH-1:0] test_data;
 integer i;
 
-rom_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(MEM_SIZE)) rom (.clk(clk), .enable(enable), .addr(test_addr), .data(test_data));
+rom_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(MEM_SIZE)) rom (.clk(clk), .addr(test_addr), .data(test_data));
 
 always #10 clk <= ~clk;
 
 initial begin
 
   clk = 0;
-  enable = 1;
   test_addr = 0;
   test_data = 0;
   i = 0;

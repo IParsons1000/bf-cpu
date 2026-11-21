@@ -3,7 +3,6 @@ module rom_oneport
    parameter DATA_WIDTH = 8,
    parameter MEM_SIZE = 8'd255  )
 (  input logic clk,
-   input logic enable,
    input logic [ADDR_WIDTH-1:0] addr,
    output logic [DATA_WIDTH-1:0] data );
 
@@ -15,7 +14,7 @@ initial begin
 end
 
 always @(posedge clk) begin
-  if (enable) temp <= mem[addr];
+  temp <= mem[addr];
 end
 
 assign data = temp;
