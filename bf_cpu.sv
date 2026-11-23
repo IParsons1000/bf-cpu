@@ -72,6 +72,7 @@ always @(posedge clk && !eom) begin
       begin
         m_data_o <= m_data_i - 1;
       end
+    ".": $display("%c", m_data_o);
     default: ;
   endcase
 
