@@ -95,7 +95,7 @@ always @(posedge clk && !eom) begin
           end
         end
       "]": ;
-      ".": $display("%c", m_data_o);
+      ".": $display("Program Output: \'%c\' (%2x)", m_data_o, m_data_o);
       ",": ;
       default: ;
     endcase
