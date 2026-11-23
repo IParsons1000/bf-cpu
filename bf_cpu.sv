@@ -58,7 +58,7 @@ always @(posedge clk && !eom) begin
         else
           mp <= mp - 1;
       end
-    default:
+    default: ;
   endcase
 
 end
