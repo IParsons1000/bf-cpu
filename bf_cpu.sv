@@ -63,6 +63,8 @@ always @(posedge clk && !eom) begin
     if (instr == "]") searching_bracket <= 0;
   end else begin
     m_enable_w <= (instr == "+" || instr == "-");
+    s_push <= (instr == "[" && m_data_o != 0 && !s_full);
+    s_pop <= (instr == "]" && m_data_o != 0 && !s_empty);
     case (instr)
       ">":
         begin
@@ -91,10 +93,18 @@ always @(posedge clk && !eom) begin
           if (m_data_o == 0) begin
             searching_bracket <= 1;
           end else begin
-            ;
+            s_data_i <= pc;
+            if (s_full) s_overflow <= 1;
+            //push
           end
         end
-      "]": ;
+      "]":
+        begin
+          if (m_data_o != 0) begin
+            if (s_empty) s_overflow <= 1;
+            //pop
+          end
+        end
       ".": $display("Program Output: \'%c\' (%2x)", m_data_o, m_data_o);
       ",": ;
       default: ;
@@ -105,7 +115,10 @@ always @(posedge clk && !eom) begin
 
 end
 
-always @(negedge clk && !eom) pc <= pc + 1;
+always @(negedge clk && !eom) begin
+  if (s_pop) pc <= s_data_o;
+  else pc <= pc + 1;
+end
 
 always @(posedge clk && eom) $finish;
 
