@@ -26,22 +26,22 @@ assign empty = top == 0;
 assign full = top == MEM_SIZE-1;
 
 always @(posedge clk) begin
+
+  dirty_push <= (push && !full);
+  dirty_pop <= (pop && !empty);
+
   if (push && !full) begin
     mem[top] <= data_i;
-    dirty_push <= 1;
   end else if (pop && !empty) begin
     data_o <= mem[top-1];
-    dirty_pop <= 1;
   end
 end
 
 always @(negedge clk) begin
   if (dirty_push) begin
     if (!full) top <= top + 1;
-    dirty_push <= 0;
   end else if (dirty_pop) begin
     if (!empty) top <= top - 1;
-    dirty_pop <= 0;
   end
 end
 
