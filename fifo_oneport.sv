@@ -12,9 +12,13 @@ module fifo_oneport
 
 logic [DATA_WIDTH-1:0] mem [MEM_SIZE:0];
 logic [ADDR_WIDTH-1:0] top;
+logic dirty_push;
+logic dirty_pop;
 
 initial begin
   top = 0;
+  dirty_push = 0;
+  dirty_pop = 0;
   data_o = 0;
 end
 
@@ -24,14 +28,21 @@ assign full = top == MEM_SIZE-1;
 always @(posedge clk) begin
   if (push && !full) begin
     mem[top] <= data_i;
+    dirty_push <= 1;
   end else if (pop && !empty) begin
     data_o <= mem[top-1];
+    dirty_pop <= 1;
   end
 end
 
 always @(negedge clk) begin
-  if (push && !full) top <= top + 1;
-  else if (pop && !empty) top <= top - 1;
+  if (dirty_push) begin
+    if (!full) top <= top + 1;
+    dirty_push <= 0;
+  end else if (dirty_pop) begin
+    if (!empty) top <= top - 1;
+    dirty_pop <= 0;
+  end
 end
 
 endmodule
