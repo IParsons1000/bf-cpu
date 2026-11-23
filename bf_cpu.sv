@@ -44,10 +44,10 @@ initial begin
 
   m_enable_w = 0;
   s_push = 0;
-  s_pop = 0;
-  s_empty = 1;
-  s_full = 0;
-  s_overflow = 0;
+  s_pop = s_push;
+  s_empty = !s_pop;
+  s_full = !s_empty;
+  s_overflow = s_full;
 
   eom = 0;
 
