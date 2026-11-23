@@ -47,32 +47,30 @@ end
 
 always @(posedge clk && !eom) begin
 
-  m_enable_w = 0;
+  m_enable_w <= (instr == "+" || instr == "-");
 
   case (instr)
     ">":
       begin
         if (mp == (RAM_SIZE-1))
-          mp = 0;
+          mp <= 0;
         else
-          mp = mp + 1;
+          mp <= mp + 1;
       end
     "<":
       begin
         if (mp == 0)
-          mp = RAM_SIZE - 1;
+          mp <= RAM_SIZE - 1;
         else
-          mp = mp - 1;
+          mp <= mp - 1;
       end
     "+":
       begin
-        m_data_o = m_data_i + 1;
-        m_enable_w = 1;
+        m_data_o <= m_data_i + 1;
       end
     "-":
       begin
-        m_data_o = m_data_i - 1;
-        m_enable_w = 1;
+        m_data_o <= m_data_i - 1;
       end
     default: ;
   endcase
