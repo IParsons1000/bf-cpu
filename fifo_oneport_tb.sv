@@ -47,7 +47,7 @@ initial begin
 
   for (; i >= 0; i = i - 1) begin
     @(posedge clk);
-    $display("Testing %x (%2x)", i, test_mem[i]);
+    $display("Testing %2x (%2x)", i, test_mem[i]);
     pop = 1;
     assert (test_data_o == test_mem[i]);
     @(negedge clk);
