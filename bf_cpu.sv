@@ -24,6 +24,8 @@ logic s_empty;
 logic s_full;
 logic s_overflow;
 
+logic searching_bracket;
+
 logic eom;
 
 rom_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(ROM_SIZE)) rom (.clk(clk), .addr(pc), .data(instr));
@@ -49,43 +51,55 @@ initial begin
   s_full = !s_empty;
   s_overflow = s_full;
 
+  searching_bracket = 0;
+
   eom = 0;
 
 end
 
 always @(posedge clk && !eom) begin
 
-  m_enable_w <= (instr == "+" || instr == "-");
-
-  case (instr)
-    ">":
-      begin
-        if (mp == (RAM_SIZE-1))
-          mp <= 0;
-        else
-          mp <= mp + 1;
-      end
-    "<":
-      begin
-        if (mp == 0)
-          mp <= RAM_SIZE - 1;
-        else
-          mp <= mp - 1;
-      end
-    "+":
-      begin
-        m_data_i <= m_data_o + 1;
-      end
-    "-":
-      begin
-        m_data_i <= m_data_o - 1;
-      end
-    "[": ;
-    "]": ;
-    ".": $display("%c", m_data_o);
-    ",": ;
-    default: ;
-  endcase
+  if (searching_bracket) begin
+    if (instr == "]") searching_bracket <= 0;
+  end else begin
+    m_enable_w <= (instr == "+" || instr == "-");
+    case (instr)
+      ">":
+        begin
+          if (mp == (RAM_SIZE-1))
+            mp <= 0;
+          else
+            mp <= mp + 1;
+        end
+      "<":
+        begin
+          if (mp == 0)
+            mp <= RAM_SIZE - 1;
+          else
+            mp <= mp - 1;
+        end
+      "+":
+        begin
+          m_data_i <= m_data_o + 1;
+        end
+      "-":
+        begin
+          m_data_i <= m_data_o - 1;
+        end
+      "[":
+        begin
+          if (!m_data_o) begin
+            searching_bracket <= 1;
+          else begin
+            ;
+          end
+        end
+      "]": ;
+      ".": $display("%c", m_data_o);
+      ",": ;
+      default: ;
+    endcase
+  end
 
   if (instr == 0 || pc == ROM_SIZE || s_overflow) eom <= 1;
 
