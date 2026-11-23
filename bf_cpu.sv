@@ -9,7 +9,7 @@ parameter RAM_SIZE = 8'd255;
 
 logic [ADDR_WIDTH-1:0] pc;
 logic [ADDR_WIDTH-1:0] mp;
-logic [ADDR_WIDTH-1:0] sp;
+//logic [ADDR_WIDTH-1:0] sp;
 
 logic [DATA_WIDTH-1:0] instr;
 logic [DATA_WIDTH-1:0] m_data_i;
@@ -18,19 +18,23 @@ logic [DATA_WIDTH-1:0] s_data_i;
 logic [DATA_WIDTH-1:0] s_data_o;
 
 logic m_enable_w;
-logic s_enable_w;
+logic s_push;
+logic s_pop;
+logic s_empty;
+logic s_full;
+logic s_overflow;
 
 logic eom;
 
 rom_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(ROM_SIZE)) rom (.clk(clk), .addr(pc), .data(instr));
 ram_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(RAM_SIZE)) ram (.clk(clk), .addr(mp), .enable_w(m_enable_w), .data_i(m_data_i), .data_o(m_data_o));
-ram_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(STK_SIZE)) stack (.clk(clk), .addr(sp), .enable_w(s_enable_w), .data_i(s_data_i), .data_o(s_data_o));
+fifo_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(STK_SIZE)) stack (.clk(clk), .push(s_push), .pop(s_pop), .data_i(s_data_i), .empty(s_empty), .full(s_full), .data_o(s_data_o));
 
 initial begin
 
   pc = 0;
   mp = 0;
-  sp = 0;
+  //sp = 0;
 
   instr = 0;
   m_data_o = 0;
@@ -39,7 +43,11 @@ initial begin
   s_data_i = s_data_o;
 
   m_enable_w = 0;
-  s_enable_w = 0;
+  s_push = 0;
+  s_pop = 0;
+  s_empty = 1;
+  s_full = 0;
+  s_overflow = 0;
 
   eom = 0;
 
@@ -79,7 +87,7 @@ always @(posedge clk && !eom) begin
     default: ;
   endcase
 
-  if (instr == 0 || pc == ROM_SIZE) eom <= 1;
+  if (instr == 0 || pc == ROM_SIZE || s_overflow) eom <= 1;
 
 end
 
