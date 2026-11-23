@@ -33,10 +33,10 @@ initial begin
   sp = 0;
 
   instr = 0;
-  m_data_i = 0;
   m_data_o = 0;
-  s_data_i = 0;
+  m_data_i = m_data_o;
   s_data_o = 0;
+  s_data_i = s_data_o;
 
   m_enable_w = 0;
   s_enable_w = 0;
