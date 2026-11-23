@@ -88,7 +88,7 @@ always @(posedge clk && !eom) begin
         end
       "[":
         begin
-          if (!m_data_o) begin
+          if (m_data_o == 0) begin
             searching_bracket <= 1;
           end else begin
             ;
