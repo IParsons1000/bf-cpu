@@ -90,7 +90,7 @@ always @(posedge clk && !eom) begin
         begin
           if (!m_data_o) begin
             searching_bracket <= 1;
-          else begin
+          end else begin
             ;
           end
         end
