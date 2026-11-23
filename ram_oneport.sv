@@ -14,6 +14,7 @@ always_ff @(posedge clk) begin
 
   if (enable_w) begin
     mem[addr] <= data_i;
+    data_o <= data_i;
   end else begin
     data_o <= mem[addr];
   end
