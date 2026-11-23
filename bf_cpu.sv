@@ -82,4 +82,6 @@ end
 
 always @(negedge clk && !eom) pc <= pc + 1;
 
+always @(posedge clk && eom) $finish;
+
 endmodule

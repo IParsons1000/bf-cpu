@@ -10,7 +10,7 @@ initial begin
 
   clk = 0;
 
-  $finish;
+  //$finish;
 
 end
 
