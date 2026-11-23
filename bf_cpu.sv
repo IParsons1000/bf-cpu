@@ -73,20 +73,13 @@ always @(posedge clk && !eom) begin
         m_data_i <= m_data_o - 1;
       end
     ".": $display("%c", m_data_o);
-    0: eom <= 1;
     default: ;
   endcase
 
-end
-
-always @(negedge clk) begin
-
-  if (pc == ROM_SIZE) begin
-    eom <= 1;
-  end else begin
-    pc <= pc + 1;
-  end
+  if (instr == 0 || pc == ROM_SIZE) eom <= 1;
 
 end
+
+always @(negedge clk && !eom) pc <= pc + 1;
 
 endmodule
