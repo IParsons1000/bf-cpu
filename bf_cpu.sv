@@ -12,8 +12,10 @@ logic [ADDR_WIDTH-1:0] mp;
 logic [ADDR_WIDTH-1:0] sp;
 
 logic [DATA_WIDTH-1:0] instr;
-logic [DATA_WIDTH-1:0] m_data;
-logic [DATA_WIDTH-1:0] s_data;
+logic [DATA_WIDTH-1:0] m_data_i;
+logic [DATA_WIDTH-1:0] m_data_o;
+logic [DATA_WIDTH-1:0] s_data_i;
+logic [DATA_WIDTH-1:0] s_data_o;
 
 logic m_enable_w;
 logic s_enable_w;
@@ -21,8 +23,8 @@ logic s_enable_w;
 logic eom;
 
 rom_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(ROM_SIZE)) rom (.clk(clk), .addr(pc), .data(instr));
-ram_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(RAM_SIZE)) ram (.clk(clk), .addr(mp), .enable_w(m_enable_w), .data_i(m_data), .data_o(m_data));
-ram_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(STK_SIZE)) stack (.clk(clk), .addr(sp), .enable_w(s_enable_w), .data_i(s_data), .data_o(s_data));
+ram_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(RAM_SIZE)) ram (.clk(clk), .addr(mp), .enable_w(m_enable_w), .data_i(m_data_i), .data_o(m_data_o));
+ram_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(STK_SIZE)) stack (.clk(clk), .addr(sp), .enable_w(s_enable_w), .data_i(s_data_i), .data_o(s_data_o));
 
 initial begin
 
@@ -31,8 +33,10 @@ initial begin
   sp = 0;
 
   instr = 0;
-  m_data = 0;
-  s_data = 0;
+  m_data_i = 0;
+  m_data_o = 0;
+  s_data_i = 0;
+  s_data_o = 0;
 
   m_enable_w = 0;
   s_enable_w = 0;
@@ -42,6 +46,8 @@ initial begin
 end
 
 always @(posedge clk && !eom) begin
+
+  m_enable_w = 0;
 
   case (instr)
     ">":
@@ -57,6 +63,16 @@ always @(posedge clk && !eom) begin
           mp <= RAM_SIZE - 1;
         else
           mp <= mp - 1;
+      end
+    "+":
+      begin
+        m_data_o = m_data_i + 1;
+        m_enable_w = 1;
+      end
+    "-":
+      begin
+        m_data_o = m_data_i - 1;
+        m_enable_w = 1;
       end
     default: ;
   endcase
