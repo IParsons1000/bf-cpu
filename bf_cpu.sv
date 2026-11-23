@@ -53,16 +53,16 @@ always @(posedge clk && !eom) begin
     ">":
       begin
         if (mp == (RAM_SIZE-1))
-          mp <= 0;
+          mp = 0;
         else
-          mp <= mp + 1;
+          mp = mp + 1;
       end
     "<":
       begin
         if (mp == 0)
-          mp <= RAM_SIZE - 1;
+          mp = RAM_SIZE - 1;
         else
-          mp <= mp - 1;
+          mp = mp - 1;
       end
     "+":
       begin
@@ -82,9 +82,9 @@ end
 always @(negedge clk) begin
 
   if (pc == ROM_SIZE) begin
-    eom <= 1;
+    eom = 1;
   end else begin
-    pc <= pc + 1;
+    pc = pc + 1;
   end
 
 end
