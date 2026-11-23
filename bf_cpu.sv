@@ -66,11 +66,11 @@ always @(posedge clk && !eom) begin
       end
     "+":
       begin
-        m_data_o <= m_data_i + 1;
+        m_data_i <= m_data_o + 1;
       end
     "-":
       begin
-        m_data_o <= m_data_i - 1;
+        m_data_i <= m_data_o - 1;
       end
     ".": $display("%c", m_data_o);
     default: ;
