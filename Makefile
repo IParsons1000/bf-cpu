@@ -1,6 +1,6 @@
 .PHONY: all test clean rom_oneport rom_oneport_tb ram_oneport ram_oneport_tb fifo_oneport bf_cpu bf_cpu_tb test_rom_oneport test_ram_oneport test_bf_cpu
 
-all: rom_oneport ram_oneport bf_cpu
+all: rom_oneport ram_oneport fifo_oneport bf_cpu
 
 rom_image.mem: rom_image.bf
 	hexdump -v -e '/1 "%02x\n"' rom_image.bf > rom_image.mem
