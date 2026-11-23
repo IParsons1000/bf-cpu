@@ -43,17 +43,22 @@ end
 
 always @(posedge clk && !eom) begin
 
-  if (instr == ">") begin
-    if (mp == (RAM_SIZE-1))
-      mp <= 0;
-    else
-      mp <= mp - 1;
-  end else if (instr == "<") begin
-    if (mp == 0)
-      mp <= RAM_SIZE - 1;
-    else
-      mp <= mp - 1;
-  end
+  case (instr)
+    ">":
+      begin
+        if (mp == (RAM_SIZE-1))
+          mp <= 0;
+        else
+          mp <= mp + 1;
+      end
+    "<":
+      begin
+        if (mp == 0)
+          mp <= RAM_SIZE - 1;
+        else
+          mp <= mp - 1;
+      end
+  endcase
 
 end
 
