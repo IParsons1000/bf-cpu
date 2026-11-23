@@ -80,9 +80,9 @@ end
 always @(negedge clk) begin
 
   if (pc == ROM_SIZE) begin
-    eom = 1;
+    eom <= 1;
   end else begin
-    pc = pc + 1;
+    pc <= pc + 1;
   end
 
 end
