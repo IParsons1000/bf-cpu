@@ -1,4 +1,4 @@
-.PHONY: all test clean rom_oneport rom_oneport_tb ram_oneport ram_oneport_tb bf_cpu bf_cpu_tb test_rom_oneport test_ram_oneport test_bf_cpu
+.PHONY: all test clean rom_oneport rom_oneport_tb ram_oneport ram_oneport_tb fifo_oneport bf_cpu bf_cpu_tb test_rom_oneport test_ram_oneport test_bf_cpu
 
 all: rom_oneport ram_oneport bf_cpu
 
@@ -16,6 +16,9 @@ ram_oneport: ram_oneport.sv
 
 ram_oneport_tb: ram_oneport ram_oneport_tb.sv
 	verilator --binary -j 0 -Wall ram_oneport_tb.sv
+
+fifo_oneport: fifo_oneport.sv
+	verilator --binary -j 0 -Wall fifo_oneport.sv
 
 bf_cpu: bf_cpu.sv
 	verilator --binary -j 0 -Wall bf_cpu.sv
