@@ -14,8 +14,8 @@ logic [DATA_WIDTH-1:0] mem [MEM_SIZE:0];
 logic [ADDR_WIDTH-1:0] top;
 
 initial begin
-  top <= 0;
-  data_o <= 0;
+  top = 0;
+  data_o = 0;
 end
 
 assign empty = top == 0;
