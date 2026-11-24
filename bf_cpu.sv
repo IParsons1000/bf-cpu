@@ -110,8 +110,8 @@ always @(posedge clk && !eom) begin
             if (s_empty) s_overflow <= 1;
             //peek
           end else begin
-	    if (s_empty) s_overflow <= 1;
-	    //pop
+            if (s_empty) s_overflow <= 1;
+            //pop
           end
         end
       ".": $display("Program Output: \'%c\' (%2x)", m_data_o, m_data_o);
