@@ -125,7 +125,7 @@ always @(posedge clk && !eom) begin
 end
 
 always @(negedge clk && !eom) begin
-  if (s_pop) pc <= s_data_o + 1;
+  if (s_peek) pc <= s_data_o + 1;
   else pc <= pc + 1;
 end
 
