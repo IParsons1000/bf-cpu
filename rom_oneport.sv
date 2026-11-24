@@ -2,7 +2,7 @@ module rom_oneport
 #( parameter ADDR_WIDTH = 8,
    parameter DATA_WIDTH = 8,
    parameter MEM_SIZE = 8'd255  )
-(  input logic clk,
+(  //input logic clk,
    input logic [ADDR_WIDTH-1:0] addr,
    output logic [DATA_WIDTH-1:0] data );
 
@@ -14,6 +14,6 @@ initial begin
   if (addr < MEM_SIZE) data = mem[addr];
 end
 
-always @(posedge clk or addr) if (addr < MEM_SIZE) data <= mem[addr];
+always @(addr) if (addr < MEM_SIZE) data <= mem[addr];
 
 endmodule
