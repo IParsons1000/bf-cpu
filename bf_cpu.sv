@@ -61,7 +61,7 @@ end
 
 always @(posedge clk && !eom) begin
 
-  $display("Instruction: \'%c\' (%x)", instr, instr);
+  $display("Instruction: \'%c\' (%x) / MP = %x / mem = %x", instr, instr, mp, m_data_o);
 
   if (searching_bracket) begin
     if (instr == "]") searching_bracket <= 0;
