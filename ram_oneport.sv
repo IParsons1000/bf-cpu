@@ -10,6 +10,10 @@ module ram_oneport
 
 logic [DATA_WIDTH-1:0] mem [MEM_SIZE:0];
 
+initial begin
+  data_o = 0;
+end
+
 always_ff @(posedge clk) begin
 
   if (enable_w) begin
