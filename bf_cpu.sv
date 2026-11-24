@@ -20,6 +20,7 @@ logic [DATA_WIDTH-1:0] s_data_o;
 logic m_enable_w;
 logic s_push;
 logic s_pop;
+logic s_peek;
 logic s_empty;
 logic s_full;
 logic s_overflow;
@@ -30,7 +31,7 @@ logic eom;
 
 rom_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(ROM_SIZE)) rom (.clk(clk), .addr(pc), .data(instr));
 ram_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(RAM_SIZE)) ram (.clk(clk), .addr(mp), .enable_w(m_enable_w), .data_i(m_data_i), .data_o(m_data_o));
-fifo_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(STK_SIZE)) stack (.clk(clk), .push(s_push), .pop(s_pop), .data_i(s_data_i), .empty(s_empty), .full(s_full), .data_o(s_data_o));
+fifo_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(STK_SIZE)) stack (.clk(clk), .push(s_push), .pop(s_pop), .peek(s_peek), .data_i(s_data_i), .empty(s_empty), .full(s_full), .data_o(s_data_o));
 
 initial begin
 
@@ -47,7 +48,8 @@ initial begin
   m_enable_w = 0;
   s_push = 0;
   s_pop = s_push;
-  s_empty = !s_pop;
+  s_peek = s_pop;
+  s_empty = !s_peek;
   s_full = !s_empty;
   s_overflow = s_full;
 
@@ -64,7 +66,9 @@ always @(posedge clk && !eom) begin
   end else begin
     m_enable_w <= (instr == "+" || instr == "-");
     s_push <= (instr == "[" && m_data_o != 0 && !s_full);
-    s_pop <= (instr == "]" && m_data_o != 0 && !s_empty);
+    s_pop <= (instr == "]" && m_data_o == 0 && !s_empty);
+    s_peek <= (instr == "]" && m_data_o != 0 && !s_empty);
+
     case (instr)
       ">":
         begin
@@ -102,7 +106,10 @@ always @(posedge clk && !eom) begin
         begin
           if (m_data_o != 0) begin
             if (s_empty) s_overflow <= 1;
-            //pop
+            //peek
+          end else begin
+	    if (s_empty) s_overflow <= 1;
+	    //pop
           end
         end
       ".": $display("Program Output: \'%c\' (%2x)", m_data_o, m_data_o);

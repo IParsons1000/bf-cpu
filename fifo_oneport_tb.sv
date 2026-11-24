@@ -25,6 +25,7 @@ initial begin
   clk = 0;
   push = 0;
   pop = 0;
+  peek = 0;
   empty = 0;
   full = 0;
   test_data_i = 0;
