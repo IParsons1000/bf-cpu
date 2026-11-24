@@ -61,6 +61,8 @@ end
 
 always @(posedge clk && !eom) begin
 
+  $display("Instruction: \'%c\' (%x)", instr, instr);
+
   if (searching_bracket) begin
     if (instr == "]") searching_bracket <= 0;
   end else begin
