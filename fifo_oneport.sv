@@ -26,7 +26,7 @@ end
 assign empty = top == 0;
 assign full = top == MEM_SIZE-1;
 
-always @(posedge clk) begin
+always @(negedge clk) begin
 
   dirty_push <= (push && !full);
   dirty_pop <= (pop && !empty);
@@ -38,7 +38,7 @@ always @(posedge clk) begin
   end
 end
 
-always @(negedge clk) begin
+always @(posedge clk) begin
   if (dirty_push) begin
     if (!full) top <= top + 1;
   end else if (dirty_pop) begin
