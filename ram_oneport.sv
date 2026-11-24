@@ -14,7 +14,7 @@ initial begin
   data_o = 0;
 end
 
-always_ff @(posedge clk) begin
+always_ff @(negedge clk) begin
 
   if (enable_w) begin
     mem[addr] <= data_i;
