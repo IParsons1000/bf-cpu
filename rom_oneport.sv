@@ -14,6 +14,6 @@ initial begin
   if (addr < MEM_SIZE) data = mem[addr];
 end
 
-always @(addr) if (addr < MEM_SIZE) data <= mem[addr];
+always @(posedge clk or addr) if (addr < MEM_SIZE) data <= mem[addr];
 
 endmodule
