@@ -7,6 +7,7 @@ parameter MEM_SIZE = 8'd255;
 logic clk;
 logic push;
 logic pop;
+logic peek;
 logic empty;
 logic full;
 logic [DATA_WIDTH-1:0] test_mem [MEM_SIZE:0];
@@ -15,7 +16,7 @@ logic [DATA_WIDTH-1:0] test_data_o;
 integer i;
 integer r;
 
-fifo_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(MEM_SIZE)) fifo (.clk(clk), .push(push), .pop(pop), .data_i(test_data_i), .empty(empty), .full(full), .data_o(test_data_o));
+fifo_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(MEM_SIZE)) fifo (.clk(clk), .push(push), .pop(pop), .peek(peek), .data_i(test_data_i), .empty(empty), .full(full), .data_o(test_data_o));
 
 always #10 clk <= ~clk;
 
@@ -46,6 +47,17 @@ initial begin
   assert (full);
 
   for (; i >= 0; i = i - 1) begin
+    @(posedge clk);
+    $display("Testing %2x (%2x)", i, test_mem[i]);
+    peek = 1;
+    assert (test_data_o == test_mem[i]);
+    @(negedge clk);
+    peek = 0;
+  end
+
+  assert (full);
+
+  for (i = 32'(MEM_SIZE); i >= 0; i = i - 1) begin
     @(posedge clk);
     $display("Testing %2x (%2x)", i, test_mem[i]);
     pop = 1;

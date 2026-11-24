@@ -5,6 +5,7 @@ module fifo_oneport
 (  input logic clk,
    input logic push,
    input logic pop,
+   input logic peek,
    input logic [DATA_WIDTH-1:0] data_i,
    output logic empty,
    output logic full,
@@ -32,7 +33,7 @@ always @(posedge clk) begin
 
   if (push && !full) begin
     mem[top] <= data_i;
-  end else if (pop && !empty) begin
+  end else if ((pop || peek) && !empty) begin
     data_o <= mem[top-1];
   end
 end
