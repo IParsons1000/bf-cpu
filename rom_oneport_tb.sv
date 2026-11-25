@@ -25,7 +25,7 @@ initial begin
 
   for (i = 0; i <= MEM_SIZE; i = i + 1) begin
     @(posedge clk);
-    $display("Testing %4x (%4x)", test_addr, test_mem[test_addr]);
+    $display("Testing %4x (%2x)", test_addr, test_mem[test_addr]);
     assert (test_data == test_mem[test_addr]);
     @(negedge clk);
     test_addr = test_addr + 1;
