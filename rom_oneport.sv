@@ -11,11 +11,11 @@ logic [DATA_WIDTH-1:0] mem [MEM_SIZE:0];
 initial begin
   $readmemh("rom_image.mem", mem);
 
-  repeat (2) @(posedge clk);
-
   if (addr < MEM_SIZE) data = mem[addr];
 end
 
-assign data = (addr < MEM_SIZE) ? mem[addr] : 0;
+always_ff @(negedge clk) begin
+  data <= (addr < MEM_SIZE) ? mem[addr] : 0;
+end
 
 endmodule
