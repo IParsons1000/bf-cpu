@@ -1,11 +1,11 @@
 module bf_cpu
 ( input logic clk );
 
-parameter ADDR_WIDTH = 8;
+parameter ADDR_WIDTH = 16;
 parameter DATA_WIDTH = 8;
-parameter ROM_SIZE = 8'd255;
-parameter STK_SIZE = 8'd255;
-parameter RAM_SIZE = 8'd255;
+parameter ROM_SIZE = 16'd65535;
+parameter STK_SIZE = 16'd65535;
+parameter RAM_SIZE = 16'd65535;
 
 logic [ADDR_WIDTH-1:0] pc;
 logic [ADDR_WIDTH-1:0] mp;
@@ -66,7 +66,7 @@ always_ff @(posedge clk) begin
   if (searching_bracket) begin
     if (instr == "]") searching_bracket <= 0;
   end else if (s_peek) begin
-    pc <= s_data_o + 1;
+    pc <= ADDR_WIDTH'(s_data_o) + 1;
     s_peek <= 0;
   end else begin
     case (instr)
@@ -114,7 +114,7 @@ always_ff @(posedge clk) begin
             searching_bracket <= 1;
 	    s_push <= 0;
           end else begin
-            s_data_i <= pc;
+            s_data_i <= DATA_WIDTH'(pc);
             if (s_full) s_overflow <= 1;
 	    s_push <= 1;
             //push

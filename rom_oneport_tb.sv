@@ -1,8 +1,8 @@
 module rom_oneport_tb;
 
-parameter ADDR_WIDTH = 8;
+parameter ADDR_WIDTH = 16;
 parameter DATA_WIDTH = 8;
-parameter MEM_SIZE = 8'd255;
+parameter MEM_SIZE = 16'd65535;
 
 logic clk;
 logic [ADDR_WIDTH-1:0] test_addr;
@@ -25,7 +25,7 @@ initial begin
 
   for (i = 0; i <= MEM_SIZE; i = i + 1) begin
     @(posedge clk);
-    $display("Testing %x (%2x)", test_addr, test_mem[test_addr]);
+    $display("Testing %4x (%4x)", test_addr, test_mem[test_addr]);
     assert (test_data == test_mem[test_addr]);
     @(negedge clk);
     test_addr = test_addr + 1;

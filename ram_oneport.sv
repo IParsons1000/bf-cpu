@@ -1,7 +1,7 @@
 module ram_oneport
-#( parameter ADDR_WIDTH = 8,
+#( parameter ADDR_WIDTH = 16,
    parameter DATA_WIDTH = 8,
-   parameter MEM_SIZE = 8'd255  )
+   parameter MEM_SIZE = 16'd65535 )
 (  input logic clk,
    input logic [ADDR_WIDTH-1:0] addr,
    input logic enable_w,

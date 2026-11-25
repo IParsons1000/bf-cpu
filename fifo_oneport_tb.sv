@@ -1,8 +1,8 @@
 module fifo_oneport_tb;
 
-parameter ADDR_WIDTH = 8;
+parameter ADDR_WIDTH = 16;
 parameter DATA_WIDTH = 8;
-parameter MEM_SIZE = 8'd255;
+parameter MEM_SIZE = 16'd65535;
 
 logic clk;
 logic push;
@@ -49,7 +49,7 @@ initial begin
 
   for (; i >= 0; i = i - 1) begin
     @(posedge clk);
-    $display("Testing %2x (%2x)", i, test_mem[i]);
+    $display("Testing %4x (%4x)", i, test_mem[i]);
     peek = 1;
     assert (test_data_o == test_mem[i]);
     @(negedge clk);
@@ -60,7 +60,7 @@ initial begin
 
   for (i = 32'(MEM_SIZE); i >= 0; i = i - 1) begin
     @(posedge clk);
-    $display("Testing %2x (%2x)", i, test_mem[i]);
+    $display("Testing %4x (%4x)", i, test_mem[i]);
     pop = 1;
     assert (test_data_o == test_mem[i]);
     @(negedge clk);
