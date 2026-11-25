@@ -141,11 +141,11 @@ always_ff @(posedge clk) begin
         end
       ".":
 	begin
-          $display("%c", m_data_o);
-            m_enable_w <= 0;
-  	    s_push <= 0;
-  	    s_pop <= 0;
-  	    s_peek <= 0;
+          $write("%c", m_data_o);
+          m_enable_w <= 0;
+  	  s_push <= 0;
+  	  s_pop <= 0;
+  	  s_peek <= 0;
 	end
       default:
 	  begin
