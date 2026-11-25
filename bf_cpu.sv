@@ -63,8 +63,6 @@ always_ff @(posedge clk) begin
 
   if (eom) $finish;
 
-  $display("Instruction: \'%c\' (%x) / MP = %x / mem = %x", instr, instr, mp, m_data_o);
-
   if (searching_bracket) begin
     if (instr == "]") searching_bracket <= 0;
   end else if (s_peek) begin
@@ -143,7 +141,7 @@ always_ff @(posedge clk) begin
         end
       ".":
 	begin
-          $display("Program Output: \'%c\' (%2x)", m_data_o, m_data_o);
+          $display("%c", m_data_o);
             m_enable_w <= 0;
   	    s_push <= 0;
   	    s_pop <= 0;
