@@ -59,18 +59,18 @@ initial begin
 
 end
 
-always @(posedge clk && !eom) begin
+always_ff @(posedge clk) begin
+
+  if (eom) $finish;
 
   $display("Instruction: \'%c\' (%x) / MP = %x / mem = %x", instr, instr, mp, m_data_o);
 
   if (searching_bracket) begin
     if (instr == "]") searching_bracket <= 0;
+  end else if (s_peek) begin
+    pc <= s_data_o;
+    s_peek <= 0;
   end else begin
-    m_enable_w <= (instr == "+" || instr == "-");
-    s_push <= (instr == "[" && m_data_o != 0 && !s_full);
-    s_pop <= (instr == "]" && m_data_o == 0 && !s_empty);
-    s_peek <= (instr == "]" && m_data_o != 0 && !s_empty);
-
     case (instr)
       ">":
         begin
@@ -78,6 +78,10 @@ always @(posedge clk && !eom) begin
             mp <= 0;
           else
             mp <= mp + 1;
+          m_enable_w <= 0;
+	  s_push <= 0;
+	  s_pop <= 0;
+	  s_peek <= 0;
         end
       "<":
         begin
@@ -85,50 +89,79 @@ always @(posedge clk && !eom) begin
             mp <= RAM_SIZE - 1;
           else
             mp <= mp - 1;
+          m_enable_w <= 0;
+	  s_push <= 0;
+	  s_pop <= 0;
+	  s_peek <= 0;
         end
       "+":
         begin
           m_data_i <= m_data_o + 1;
+          m_enable_w <= 1;
+	  s_push <= 0;
+	  s_pop <= 0;
+	  s_peek <= 0;
         end
       "-":
         begin
           m_data_i <= m_data_o - 1;
+          m_enable_w <= 1;
+	  s_push <= 0;
+	  s_pop <= 0;
+	  s_peek <= 0;
         end
       "[":
         begin
           if (m_data_o == 0) begin
             searching_bracket <= 1;
+	    s_push <= 0;
           end else begin
             s_data_i <= pc;
             if (s_full) s_overflow <= 1;
+	    s_push <= 1;
             //push
           end
+          m_enable_w <= 0;
+	  s_pop <= 0;
+	  s_peek <= 0;
         end
       "]":
         begin
           if (m_data_o != 0) begin
             if (s_empty) s_overflow <= 1;
+	    s_peek <= 1;
+	    s_pop <= 0;
             //peek
           end else begin
             if (s_empty) s_overflow <= 1;
+	    s_peek <= 0;
+	    s_pop <= 1;
             //pop
           end
+	  m_enable_w <= 0;
+	  s_push <= 0;
         end
-      ".": $display("Program Output: \'%c\' (%2x)", m_data_o, m_data_o);
-      ",": ;
-      default: ;
+      ".":
+	begin
+          $display("Program Output: \'%c\' (%2x)", m_data_o, m_data_o);
+            m_enable_w <= 0;
+  	    s_push <= 0;
+  	    s_pop <= 0;
+  	    s_peek <= 0;
+	end
+      default:
+	  begin
+            m_enable_w <= 0;
+  	    s_push <= 0;
+  	    s_pop <= 0;
+  	    s_peek <= 0;
+	  end
     endcase
   end
 
   if (instr == 0 || pc == ROM_SIZE || s_overflow) eom <= 1;
+  else if (!s_peek) pc <= pc + 1;
 
 end
-
-always @(negedge clk && !eom) begin
-  if (s_peek) pc <= s_data_o + 1;
-  else pc <= pc + 1;
-end
-
-always @(posedge clk && eom) $finish;
 
 endmodule
