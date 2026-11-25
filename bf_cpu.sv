@@ -68,7 +68,7 @@ always_ff @(posedge clk) begin
   if (searching_bracket) begin
     if (instr == "]") searching_bracket <= 0;
   end else if (s_peek) begin
-    pc <= s_data_o;
+    pc <= s_data_o + 1;
     s_peek <= 0;
   end else begin
     case (instr)
