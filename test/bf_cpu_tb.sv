@@ -7,18 +7,18 @@
 
 module bf_cpu_tb;
 
-logic clk;
+  logic clk;
 
-bf_cpu cpu (.clk(clk));
+  bf_cpu cpu (.clk(clk));
 
-always #10 clk <= ~clk;
+  always #10 clk <= ~clk;
 
-initial begin
+  initial begin
 
-  clk = 0;
+    clk = 0;
 
-  $finish;
+    $finish;
 
-end
+  end
 
 endmodule
