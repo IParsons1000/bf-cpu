@@ -14,8 +14,8 @@ logic [ADDR_WIDTH-1:0] mp;
 logic [DATA_WIDTH-1:0] instr;
 logic [DATA_WIDTH-1:0] m_data_i;
 logic [DATA_WIDTH-1:0] m_data_o;
-logic [DATA_WIDTH-1:0] s_data_i;
-logic [DATA_WIDTH-1:0] s_data_o;
+logic [ADDR_WIDTH-1:0] s_data_i;
+logic [ADDR_WIDTH-1:0] s_data_o;
 
 logic m_enable_w;
 logic s_push;
@@ -31,7 +31,7 @@ logic eom;
 
 rom_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(ROM_SIZE)) rom (.clk(clk), .addr(pc), .data(instr));
 ram_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(RAM_SIZE)) ram (.clk(clk), .addr(mp), .enable_w(m_enable_w), .data_i(m_data_i), .data_o(m_data_o));
-fifo_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(STK_SIZE)) stack (.clk(clk), .push(s_push), .pop(s_pop), .peek(s_peek), .data_i(s_data_i), .empty(s_empty), .full(s_full), .data_o(s_data_o));
+fifo_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(ADDR_WIDTH), .MEM_SIZE(STK_SIZE)) stack (.clk(clk), .push(s_push), .pop(s_pop), .peek(s_peek), .data_i(s_data_i), .empty(s_empty), .full(s_full), .data_o(s_data_o));
 
 initial begin
 
@@ -66,7 +66,7 @@ always_ff @(posedge clk) begin
   if (searching_bracket) begin
     if (instr == "]") searching_bracket <= 0;
   end else if (s_peek) begin
-    pc <= ADDR_WIDTH'(s_data_o) + 1;
+    pc <= s_data_o + 1;
     s_peek <= 0;
   end else begin
     case (instr)
@@ -114,9 +114,9 @@ always_ff @(posedge clk) begin
             searching_bracket <= 1;
 	    s_push <= 0;
           end else begin
-            s_data_i <= DATA_WIDTH'(pc);
             if (s_full) s_overflow <= 1;
 	    s_push <= 1;
+            s_data_i <= pc;
             //push
           end
           m_enable_w <= 0;

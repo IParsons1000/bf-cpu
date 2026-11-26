@@ -1,6 +1,6 @@
 module fifo_oneport
 #( parameter ADDR_WIDTH = 16,
-   parameter DATA_WIDTH = 8,
+   parameter DATA_WIDTH = 16,
    parameter MEM_SIZE = 16'd65535  )
 (  input logic clk,
    input logic push,
@@ -24,7 +24,7 @@ initial begin
 end
 
 assign empty = top == 0;
-assign full = top == MEM_SIZE-1;
+assign full = top == MEM_SIZE;
 
 always_ff @(negedge clk) begin
 
