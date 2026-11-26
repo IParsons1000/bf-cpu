@@ -25,8 +25,6 @@ logic s_empty;
 logic s_full;
 logic s_overflow;
 
-
-logic eom;
 logic [ADDR_WIDTH-1:0] searching_bracket;
 
 rom_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(ROM_SIZE)) rom (.clk(clk), .addr(pc), .data(instr));
@@ -55,13 +53,9 @@ initial begin
 
   searching_bracket = 0;
 
-  eom = 0;
-
 end
 
 always_ff @(posedge clk) begin
-
-  if (eom) $finish;
 
   if (searching_bracket > 0) begin
     if (instr == "]") searching_bracket <= searching_bracket - 1;
@@ -158,7 +152,7 @@ always_ff @(posedge clk) begin
     endcase
   end
 
-  if (instr == 0 || pc == ROM_SIZE || s_overflow) eom <= 1;
+  if (instr == 0 || pc == ROM_SIZE || s_overflow) $finish;
   else if (!s_peek) pc <= pc + 1;
 
 end
