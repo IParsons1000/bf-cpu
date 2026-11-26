@@ -25,9 +25,9 @@ logic s_empty;
 logic s_full;
 logic s_overflow;
 
-logic searching_bracket;
 
 logic eom;
+logic [ADDR_WIDTH-1:0] searching_bracket;
 
 rom_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(ROM_SIZE)) rom (.clk(clk), .addr(pc), .data(instr));
 ram_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(RAM_SIZE)) ram (.clk(clk), .addr(mp), .enable_w(m_enable_w), .data_i(m_data_i), .data_o(m_data_o));
@@ -63,8 +63,9 @@ always_ff @(posedge clk) begin
 
   if (eom) $finish;
 
-  if (searching_bracket) begin
-    if (instr == "]") searching_bracket <= 0;
+  if (searching_bracket > 0) begin
+    if (instr == "]") searching_bracket <= searching_bracket - 1;
+    else if (instr == "[") searching_bracket <= searching_bracket + 1;
   end else if (s_peek) begin
     pc <= s_data_o + 1;
     s_peek <= 0;
