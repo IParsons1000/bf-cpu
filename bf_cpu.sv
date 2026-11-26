@@ -27,6 +27,8 @@ logic s_overflow;
 
 logic [ADDR_WIDTH-1:0] searching_bracket;
 
+integer stdin;
+
 rom_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(ROM_SIZE)) rom (.clk(clk), .addr(pc), .data(instr));
 ram_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEM_SIZE(RAM_SIZE)) ram (.clk(clk), .addr(mp), .enable_w(m_enable_w), .data_i(m_data_i), .data_o(m_data_o));
 fifo_oneport #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(ADDR_WIDTH), .MEM_SIZE(STK_SIZE)) stack (.clk(clk), .push(s_push), .pop(s_pop), .peek(s_peek), .data_i(s_data_i), .empty(s_empty), .full(s_full), .data_o(s_data_o));
@@ -52,6 +54,8 @@ initial begin
   s_overflow = s_full;
 
   searching_bracket = 0;
+
+  stdin = $fopen("/dev/stdin", "rb");
 
 end
 
@@ -144,6 +148,14 @@ always_ff @(posedge clk) begin
 	begin
           $write("%c", m_data_o);
           m_enable_w <= 0;
+  	  s_push <= 0;
+  	  s_pop <= 0;
+  	  s_peek <= 0;
+	end
+      ",":
+	begin
+          m_data_i <= $fgetc(stdin);
+          m_enable_w <= 1;
   	  s_push <= 0;
   	  s_pop <= 0;
   	  s_peek <= 0;
