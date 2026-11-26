@@ -1,3 +1,8 @@
+#
+# (c)2026 Ira Parsons
+# bf-cpu - a brainf*ck-native cpu
+#
+	
 SYNTHESIZER ?= verilator
 SYNTH_ARGS = --binary -j 0 -Wall
 SYNTH_ARGS += -y src

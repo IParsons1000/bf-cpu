@@ -1,3 +1,10 @@
+/*
+ * 
+ * (c)2026 Ira Parsons
+ * bf-cpu - a brainf*ck-native cpu
+ *
+ */
+
 module rom_oneport_tb;
 
 parameter ADDR_WIDTH = 16;

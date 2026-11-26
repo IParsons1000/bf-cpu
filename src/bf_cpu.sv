@@ -1,3 +1,10 @@
+/*
+ * 
+ * (c)2026 Ira Parsons
+ * bf-cpu - a brainf*ck-native cpu
+ *
+ */
+
 module bf_cpu
 ( input logic clk );
 
