@@ -109,9 +109,11 @@ always_ff @(posedge clk) begin
             searching_bracket <= 1;
 	    s_push <= 0;
           end else begin
-            if (s_full) s_overflow <= 1;
-	    s_push <= 1;
             s_data_i <= pc;
+	    if (s_full) begin
+              s_overflow <= 1;
+	      s_push <= 0;
+	    end else s_push <= 1;
             //push
           end
           m_enable_w <= 0;
@@ -121,14 +123,18 @@ always_ff @(posedge clk) begin
       "]":
         begin
           if (m_data_o != 0) begin
-            if (s_empty) s_overflow <= 1;
-	    s_peek <= 1;
+	    if (s_empty) begin
+	      s_overflow <= 1;
+	      s_peek <= 0;
+	    end else s_peek <= 1;
 	    s_pop <= 0;
             //peek
           end else begin
-            if (s_empty) s_overflow <= 1;
+	    if (s_empty) begin
+	      s_overflow <= 1;
+	      s_pop <= 0;
+	    end else s_pop <= 1;
 	    s_peek <= 0;
-	    s_pop <= 1;
             //pop
           end
 	  m_enable_w <= 0;
