@@ -17,7 +17,6 @@ module bf_cpu (
 
   logic [ADDR_WIDTH-1:0] pc;
   logic [ADDR_WIDTH-1:0] mp;
-  //logic [ADDR_WIDTH-1:0] sp;
 
   logic [DATA_WIDTH-1:0] instr;
   logic [DATA_WIDTH-1:0] m_data_i;
@@ -148,7 +147,6 @@ module bf_cpu (
               s_overflow <= 1;
               s_push <= 0;
             end else s_push <= 1;
-            //push
           end
           m_enable_w <= 0;
           s_pop <= 0;
@@ -161,14 +159,12 @@ module bf_cpu (
               s_peek <= 0;
             end else s_peek <= 1;
             s_pop <= 0;
-            //peek
           end else begin
             if (s_empty) begin
               s_overflow <= 1;
               s_pop <= 0;
             end else s_pop <= 1;
             s_peek <= 0;
-            //pop
           end
           m_enable_w <= 0;
           s_push <= 0;
