@@ -36,8 +36,9 @@ $ make test_bf_cpu
 
 ### Running Other Programs
 
-The default ROM image is a ROT13 cipher program, contained in `rom_image.bf`.
-To run a different program, replace the contents of that file and rebuild.
+The default ROM image is a program that prints the Fibonacci numbers less
+than 100, contained in `rom_image.bf`.  To run a different program, replace
+the contents of that file and rebuild.
 
 ## Credit
 
