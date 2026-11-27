@@ -33,6 +33,8 @@ module bf_cpu (
   logic s_full;
   logic s_overflow;
 
+  logic eom;
+
   logic [ADDR_WIDTH-1:0] searching_bracket;
 
   integer stdin;
@@ -91,6 +93,8 @@ module bf_cpu (
     s_empty = !s_peek;
     s_full = !s_empty;
     s_overflow = s_full;
+
+    eom = 0;
 
     searching_bracket = 0;
 
@@ -197,7 +201,7 @@ module bf_cpu (
       endcase
     end
 
-    if (instr == 0 || pc == ROM_SIZE || s_overflow) $finish;
+    if (instr == 0 || pc == ROM_SIZE || eom || s_overflow) $finish;
     else if (!s_peek) pc <= pc + 1;
 
   end
