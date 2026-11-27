@@ -1,0 +1,55 @@
+<!--- vim: syntax=markdown
+-->
+
+# bf-cpu - a brainf*ck-native cpu
+
+## Overview
+
+bf-cpu is a cpu that runs brainf*ck as an instruction set, designed in
+SystemVerilog.
+
+## Specs
+
+ * ROM / 64 KiB
+ * RAM / 64 KiB
+ * Cache / 64 KiB (for call stack)
+
+## Simulation
+
+bf-cpu has been tested in simulation, but not real hardware.  Verilator is the
+recommended tool for synthesization and simulation.  To synthesize all modules,
+run
+
+```sh
+$ make all
+```
+
+Optionally, run all testbenches on the build with
+
+```sh
+$ make test
+```
+
+To simulate the cpu, run
+
+```sh
+$ make test_bf_cpu
+```
+
+### Running Other Programs
+
+The default ROM image is a ROT13 cipher program, contained in `rom_image.bf`.
+To run a different program, replace the contents of that file and rebuild.
+
+## Credit
+
+The Brainf*ck programming language was originally created by Urban Mueller in
+1993.
+
+Everything in this repository not otherwise disclaimed was written by Ira
+Parsons.  No LLMs were used at any point in this project.
+
+## License
+
+bf-cpu is licensed under the 3-clause BSD license.  The full license text is
+available in `LICENSE'.
