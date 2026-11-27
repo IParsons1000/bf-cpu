@@ -14,6 +14,7 @@ module bf_cpu (
   parameter ROM_SIZE   = 16'd65535;
   parameter STK_SIZE   = 16'd65535;
   parameter RAM_SIZE   = 16'd65535;
+  parameter WRAP_MEM   = 1;
 
   logic [ADDR_WIDTH-1:0] pc;
   logic [ADDR_WIDTH-1:0] mp;
@@ -108,16 +109,20 @@ module bf_cpu (
     end else begin
       case (instr)
         ">": begin
-          if (mp == (RAM_SIZE - 1)) mp <= 0;
-          else mp <= mp + 1;
+          if (mp == (RAM_SIZE - 1)) begin
+            if (WRAP_MEM) mp <= 0;
+            else eom <= 1;
+          end else mp <= mp + 1;
           m_enable_w <= 0;
           s_push <= 0;
           s_pop <= 0;
           s_peek <= 0;
         end
         "<": begin
-          if (mp == 0) mp <= RAM_SIZE - 1;
-          else mp <= mp - 1;
+          if (mp == 0) begin
+            if (WRAP_MEM) mp <= RAM_SIZE - 1;
+            else eom <= 1;
+          end else mp <= mp - 1;
           m_enable_w <= 0;
           s_push <= 0;
           s_pop <= 0;
