@@ -17,7 +17,7 @@ module bf_cpu_tb;
 
     clk = 0;
 
-    $finish;
+    //$finish;
 
   end
 

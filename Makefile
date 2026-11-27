@@ -10,6 +10,8 @@ SYNTH_ARGS += -y src
 OUTPUT_DIR = bin
 SYNTH_ARGS += --Mdir $(OUTPUT_DIR)
 
+ROM_IMG_SRC ?= rom_image.bf
+
 SRC_TARGETS = rom_oneport ram_oneport fifo_oneport bf_cpu
 TB_TARGETS = rom_oneport_tb ram_oneport_tb fifo_oneport_tb bf_cpu_tb
 TEST_TARGETS = test_rom_oneport test_ram_oneport test_fifo_oneport test_bf_cpu
@@ -18,8 +20,8 @@ TEST_TARGETS = test_rom_oneport test_ram_oneport test_fifo_oneport test_bf_cpu
 
 all: rom_oneport ram_oneport fifo_oneport bf_cpu
 
-rom_image.mem: rom_image.bf
-	hexdump -v -e '/1 "%02x\n"' rom_image.bf > rom_image.mem
+rom_image.mem: $(ROM_IMG_SRC)
+	hexdump -v -e '/1 "%02x\n"' $(ROM_IMG_SRC) > rom_image.mem
 
 rom_oneport: rom_image.mem src/rom_oneport.sv
 	$(SYNTHESIZER) $(SYNTH_ARGS) src/rom_oneport.sv
