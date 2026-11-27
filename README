@@ -1,9 +1,7 @@
 <!--- vim: syntax=markdown
 -->
 
-# bf-cpu - a brainf*ck-native cpu
-
-## Overview
+# bf-cpu
 
 bf-cpu is a cpu that runs brainf*ck as an instruction set, designed in
 SystemVerilog.
